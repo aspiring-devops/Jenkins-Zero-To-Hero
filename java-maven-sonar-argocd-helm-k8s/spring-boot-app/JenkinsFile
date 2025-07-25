@@ -13,16 +13,26 @@ pipeline {
       }
     }
     stage('Build and Test') {
+      when {
+    not {
+      expression { fileExists('java-maven-sonar-argocd-helm-k8s/spring-boot-app/target/spring-boot-web.jar') }
+    }
+  }
       steps {
         sh 'ls -ltr'
         // build the project and create a JAR file
        // sh 'id -u && id -g && whoami'
-        sh 'chown -R 111:113 java-maven-sonar-argocd-helm-k8s/spring-boot-app/target || true'
-        sh 'rm -rf java-maven-sonar-argocd-helm-k8s/spring-boot-app/target'
+       // sh 'chown -R 111:113 java-maven-sonar-argocd-helm-k8s/spring-boot-app/target || true'
+        //sh 'rm -rf java-maven-sonar-argocd-helm-k8s/spring-boot-app/target'
         sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
       }
     }
     stage('Static Code Analysis') {
+     when {
+    not {
+      expression { fileExists('java-maven-sonar-argocd-helm-k8s/spring-boot-app/target/sonar/report-task.txt') }
+    }
+  }
       environment {
         SONAR_URL = "http://13.234.38.118:9000"
       }
