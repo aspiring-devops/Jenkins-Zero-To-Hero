@@ -1,10 +1,11 @@
 pipeline {
   agent {
-    docker {
-      image 'kunal508/maven:3.9.6-eclipse-temurin-17-docker-cli-1'
-      args '-u 0:0 -v /var/run/docker.sock:/var/run/docker.sock'
-    }
+  docker {
+    image 'kunal508/maven:3.9.6-docker-cli-1'
+    args "-u 111:113 -v /var/run/docker.sock:/var/run/docker.sock -v ${env.WORKSPACE}:${env.WORKSPACE}"
   }
+}
+
   stages {
    stage('Checkout') {
       steps {
@@ -72,6 +73,7 @@ pipeline {
            // sh 'echo passed'
             withCredentials([string(credentialsId: 'github-credentials', variable: 'GITHUB_TOKEN')]) {
                 sh '''
+                    cd $WORKSPACE
                     git config user.email "kunal.xyz@gmail.com"
                     git config user.name "Kishore Kunal"
                     BUILD_NUMBER=${BUILD_NUMBER}
