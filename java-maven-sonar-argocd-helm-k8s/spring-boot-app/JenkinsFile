@@ -13,11 +13,11 @@ pipeline {
       }
     }
     stage('Build and Test') {
-      when {
-    not {
-      expression { fileExists('java-maven-sonar-argocd-helm-k8s/spring-boot-app/target/spring-boot-web.jar') }
-    }
-  }
+   //   when {
+    //not {
+      //expression { fileExists('java-maven-sonar-argocd-helm-k8s/spring-boot-app/target/spring-boot-web.jar') }
+    //}
+  //}
       steps {
         sh 'ls -ltr'
         // build the project and create a JAR file
@@ -28,11 +28,11 @@ pipeline {
       }
     }
     stage('Static Code Analysis') {
-     when {
-    not {
-      expression { fileExists('java-maven-sonar-argocd-helm-k8s/spring-boot-app/target/sonar/report-task.txt') }
-    }
-  }
+    // when {
+    //not {
+     // expression { fileExists('java-maven-sonar-argocd-helm-k8s/spring-boot-app/target/sonar/report-task.txt') }
+   // }
+ // }
       environment {
         SONAR_URL = "http://13.234.38.118:9000"
       }
@@ -69,11 +69,11 @@ pipeline {
             GIT_USER_NAME = "iam-veeramalla"
         }
         steps {
-            sh 'echo passed'
-            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+           // sh 'echo passed'
+            withCredentials([string(credentialsId: 'github-credentials', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                    git config user.email "abhishek.xyz@gmail.com"
-                    git config user.name "Abhishek Veeramalla"
+                    git config user.email "kunal.xyz@gmail.com"
+                    git config user.name "Kishore Kunal"
                     BUILD_NUMBER=${BUILD_NUMBER}
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                     git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
